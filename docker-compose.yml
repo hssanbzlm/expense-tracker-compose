@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  my-mongo:
+    image: mongo
+    restart: always
+  front:
+    build:
+      context: ./expense-tracker
+      dockerfile: Dockerfile
+    ports:
+      - 4200:4200
+    depends_on:
+      - back
+  back:
+    build:
+      context: ./expense-tracker-server
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    env_file:
+      - ./expense-tracker-server/.env-dev
+    depends_on:
+      - my-mongo
+    restart: always
